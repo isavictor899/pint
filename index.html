@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMSA | Clinical Medicine Students Association</title>
+    
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/2966/2966327.png" sizes="32x32">
+    <meta name="description" content="The official body for Clinical Medicine students. We focus on academic excellence, clinical skills development, and community health outreach.">
+    
+    <!-- Google Fonts: Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Preconnect to Image Source for Speed -->
+    <link rel="preconnect" href="https://images.unsplash.com">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        // Safety check: Ensure tailwind is loaded before configuring
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['Montserrat', 'sans-serif'],
+                        },
+                        colors: {
+                            primary: '#0284c7', // Medical Blue (Light)
+                            secondary: '#0c4a6e', // Navy Blue (Dark)
+                            accent: '#e0f2fe', // Very light blue
+                            dark: '#1a1a1a',
+                            light: '#f8fafc'
+                        }
+                    }
+                }
+            }
+        } else {
+            console.warn('Tailwind CSS failed to load or is not yet available.');
+        }
+    </script>
+    
+    <!-- Styles -->
+    <style>
+        /* Hero Background - Medical Theme - Optimized Quality */
+        .hero-bg {
+            background-image: linear-gradient(rgba(12, 74, 110, 0.7), rgba(12, 74, 110, 0.7)), url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&q=70&w=1920');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding-top: 5rem;
+        }
+
+        /* About Background - Medical Theme - Optimized Quality */
+        .about-bg {
+            background-image: linear-gradient(rgba(2, 132, 199, 0.85), rgba(12, 74, 110, 0.9)), url('https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=60&w=1200');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        @media (max-width: 768px) {
+            .about-bg, .hero-bg {
+                background-attachment: scroll;
+            }
+        }
+
+        .btn-hover { transition: all .3s ease; }
+        .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,.15); }
+        
+        #mobile-menu { transition: max-height .3s ease-in-out; max-height: 0; overflow: hidden; }
+        #mobile-menu.active { max-height: 400px; }
+
+        /* Carousel CSS - Optimized */
+        .carousel { position: relative; overflow: visible; padding-bottom: 3rem; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .carousel__viewport { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; padding-bottom: 20px; list-style: none; padding: 0; margin: 0; padding-left: 1rem; padding-right: 1rem; will-change: scroll-position; }
+        .carousel__viewport::-webkit-scrollbar { height: 8px; }
+        .carousel__viewport::-webkit-scrollbar-thumb { background: #0284c7; border-radius: 10px; }
+        .carousel__viewport::-webkit-scrollbar-track { background: #e0f2fe; border-radius: 10px; }
+        .carousel__viewport { -ms-overflow-style: auto; scrollbar-width: thin; }
+        .carousel__slide { flex: 0 0 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; list-style: none; padding: 0 1rem; box-sizing: border-box; display: flex; justify-content: center; align-items: flex-start; }
+        
+        @media (min-width: 640px) { .carousel__slide { flex: 0 0 50%; } }
+        @media (min-width: 1024px) { .carousel__slide { flex: 0 0 33.333%; } }
+
+        .carousel__control { position: absolute; top: 50%; transform: translateY(-50%); display: flex; align-items: center; justify-content: center; width: 50px; height: 50px; background-color: rgba(2, 132, 199, 0.8); color: white; border-radius: 50%; text-decoration: none; z-index: 10; transition: background-color 0.3s, opacity 0.3s; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); display: none; }
+        @media (min-width: 768px) { .carousel__control { display: flex; } }
+        .carousel__control:hover { background-color: var(--color-secondary); opacity: 1; }
+        .carousel__prev { left: 1rem; }
+        .carousel__next { right: 1rem; }
+        
+        .carousel__navigation { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+        .carousel__navigation-list { display: flex; padding: 0; margin: 0; }
+        .carousel__navigation-item { list-style: none; margin: 0 0.5rem; }
+        .carousel__navigation-button { display: block; width: 12px; height: 12px; background-color: #d1d5db; border-radius: 50%; transition: background-color 0.3s; text-indent: -9999px; outline: none; cursor: pointer; }
+        .carousel__navigation-button.active { background-color: #0284c7; box-shadow: 0 2px 6px rgba(0,0,0,0.12); }
+        .carousel__viewport:focus { outline: 3px solid rgba(2, 132, 199, 0.18); outline-offset: 6px; }
+
+        .product-card { width: 100%; }
+
+        /* Prevent carousel scroll from affecting page scroll on mobile */
+        @media (max-width: 768px) {
+            .carousel__viewport {
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+            }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: #0284c7; border-radius: 10px; }
+        ::-webkit-scrollbar-track { background: #e0f2fe; }
+
+        .header-scrolled { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(5px); }
+
+        /* Modal Styles */
+        .full-screen-modal { display: none; background-color: rgba(0, 0, 0, 0.7); overflow-y: auto; }
+        .full-screen-modal.active { display: flex; }
+        .modal-content-animated { transform: scale(0.9); opacity: 0; transition: all 0.3s ease-out; margin: auto; }
+        .full-screen-modal.active .modal-content-animated { transform: scale(1); opacity: 1; }
+
+        /* Floating WhatsApp Button */
+        .whatsapp-float { position: fixed; right: 1rem; bottom: 1rem; width: 56px; height: 56px; background: #25D366; color: #fff; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 6px 16px rgba(0,0,0,0.18); z-index: 60; transition: transform .18s ease; }
+        .whatsapp-float:hover { transform: translateY(-4px); box-shadow: 0 10px 26px rgba(0,0,0,0.22); }
+        .whatsapp-float i { font-size: 26px; }
+    </style>
+</head>
+<body class="font-sans text-gray-800 antialiased">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo -->
+                <a href="#home" class="flex items-center gap-2">
+                    <i class="fas fa-user-md text-primary text-4xl"></i>
+                    <div class="flex flex-col">
+                        <span class="font-bold text-xl text-secondary tracking-tight">CMSA</span>
+                        <span class="text-xs text-gray-500 font-medium">University Chapter</span>
+                    </div>
+                </a>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#home" class="text-gray-600 hover:text-primary font-medium transition">Home</a>
+                    <a href="#activities" class="text-gray-600 hover:text-primary font-medium transition">Activities</a>
+                    <a href="#resources" class="text-gray-600 hover:text-primary font-medium transition">Resources</a>
+                    <a href="#about" class="text-gray-600 hover:text-primary font-medium transition">About CMSA</a>
+                    <button onclick="openInquiryModal()" class="px-5 py-2 bg-primary text-white rounded-full hover:bg-secondary transition shadow-sm btn-hover font-medium">Join Us</button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="md:hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#home" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Home</a>
+                <a href="#activities" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Activities</a>
+                <a href="#resources" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Resources</a>
+                <a href="#about" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">About Us</a>
+                <button onclick="openInquiryModal()" class="w-full px-3 py-2 text-primary font-bold hover:bg-gray-50 rounded-md">Join Association</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="home" class="hero-bg flex items-center justify-center min-h-screen">
+        <div class="max-w-4xl mx-auto px-4 text-center text-white">
+            <h1 class="text-3xl sm:text-4xl md:text-6xl font-bold mb-6 leading-tight drop-shadow-lg">
+                Excellence in Clinical Medicine & Future Healthcare
+            </h1>
+            <p class="text-lg md:text-xl mb-10 text-gray-100 font-light drop-shadow-md max-w-2xl mx-auto">
+                Uniting students to foster academic growth, refine clinical skills, and serve our community through compassionate care.
+            </p>
+            
+            <button onclick="openInquiryModal()" class="px-10 py-4 bg-transparent border-2 border-white text-white font-bold rounded-full hover:bg-white hover:text-primary transition btn-hover uppercase tracking-wider text-lg">
+                Become a Member
+            </button>
+        </div>
+    </header>
+
+    <!-- Activities / Features Section -->
+    <section id="activities" class="py-20 bg-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Core Activities</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Activity 1 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition duration-300 group">
+                    <div class="h-48 overflow-hidden">
+                        <!-- Optimized: w=400, q=60, lazy -->
+                        <img src="https://images.unsplash.com/photo-1576091160550-2187d80aeff2?w=400&q=60&auto=format&fit=crop" 
+                             alt="Clinical Skills" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                             loading="lazy" decoding="async">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-4 text-secondary">Clinical Skills Workshops</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Hands-on training sessions focusing on suturing, catheterization, phlebotomy, and first aid to bridge the gap between theory and hospital practice.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Activity 2 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition duration-300 group">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?w=400&q=60&auto=format&fit=crop" 
+                             alt="Medical Camp" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                             loading="lazy" decoding="async">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-4 text-secondary">Community Medical Camps</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            We organize regular outreach programs to provide free check-ups, basic treatment, and health education to underserved rural communities.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Activity 3 -->
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition duration-300 group">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=400&q=60&auto=format&fit=crop" 
+                             alt="Academic Support" 
+                             class="w-full h-full object-cover group-hover:scale-110 transition duration-500"
+                             loading="lazy" decoding="async">
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold mb-4 text-secondary">Academic & Research Support</h3>
+                        <p class="text-gray-600 leading-relaxed">
+                            Peer mentorship programs, journal clubs, and revision marathons designed to ensure every student excels in their continuous assessment tests and final exams.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section (Carousel) -->
+    <section id="resources" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Student Resources</h2>
+            <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-16">
+                Click on any resource card to view details or access materials.
+            </p>
+
+            <section class="carousel" aria-label="Resources Gallery">
+                <!-- Navigation Controls -->
+                <a href="#carousel__slide1" class="carousel__control carousel__prev" aria-label="Previous slide">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                <a href="#carousel__slide6" class="carousel__control carousel__next" aria-label="Next slide">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+
+                <ol class="carousel__viewport" tabindex="0" role="list">
+                    <!-- SLIDE 1: Anatomy -->
+                    <li id="carousel__slide1" tabindex="0" class="carousel__slide">
+                        <div class="product-card resource-card border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl hover:scale-105 transition bg-white text-left h-full cursor-pointer"
+                             data-title="Anatomy & Physiology Guides"
+                             data-desc="Our comprehensive library includes 3D anatomical models, high-yield flashcards, and summarized lecture notes tailored for 1st and 2nd-year units. Perfect for exam revision."
+                             data-img="https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=600&q=75&auto=format&fit=crop">
+                            <div class="aspect-square bg-gray-100 mb-4 rounded-lg overflow-hidden pointer-events-none">
+                                <img src="https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=400&q=60&auto=format&fit=crop" alt="Anatomy Guides" class="w-full h-full object-cover" loading="lazy" decoding="async">
+                            </div>
+                            <h3 class="text-xl font-extrabold mb-2 text-secondary pointer-events-none">Anatomy & Physiology Guides</h3>
+                            <p class="text-gray-600 text-sm pointer-events-none">Comprehensive revision notes and 3D models specifically curated for 1st and 2nd-year students.</p>
+                        </div>
+                    </li>
+
+                    <!-- SLIDE 2: Clinical Coat -->
+                    <li id="carousel__slide2" tabindex="0" class="carousel__slide">
+                        <div class="product-card resource-card border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl hover:scale-105 transition bg-white text-left h-full cursor-pointer"
+                             data-title="CMSA Branded Gear"
+                             data-desc="Show your association pride. We stock high-quality white lab coats, embroidered scrubs, and hoodies. Available in all sizes. Proceeds support our medical camps."
+                             data-img="https://images.unsplash.com/photo-1584634731339-252c581abfc5?w=600&q=75&auto=format&fit=crop">
+                            <div class="aspect-square bg-gray-100 mb-4 rounded-lg overflow-hidden pointer-events-none">
+                                <img src="https://images.unsplash.com/photo-1584634731339-252c581abfc5?w=400&q=60&auto=format&fit=crop" alt="Branded Gear" class="w-full h-full object-cover" loading="lazy" decoding="async">
+                            </div>
+                            <h3 class="text-xl font-extrabold mb-2 text-secondary pointer-events-none">CMSA Branded Gear</h3>
+                            <p class="text-gray-600 text-sm pointer-events-none">Official lab coats, scrubs, and hoodies branded with the association logo. Look professional on rounds.</p>
+                        </div>
+                    </li>
+
+                    <!-- SLIDE 3: Diagnostic Sets -->
+                    <li id="carousel__slide3" tabindex="0" class="carousel__slide">
+                        <div class="product-card resource-card border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl hover:scale-105 transition bg-white text-left h-full cursor-pointer"
+                             data-title="Diagnostic Equipment"
+                             data-desc="We partner with suppliers to bring you student-friendly prices on Littmann stethoscopes, digital BP machines, tendon hammers, and penlights. Bulk orders available."
+                             data-img="https://images.unsplash.com/photo-1605176173609-a0067079b419?w=500&auto=format&fit=crop">
+                            <div class="aspect-square bg-gray-100 mb-4 rounded-lg overflow-hidden pointer-events-none">
+                                <img src="https://images.unsplash.com/photo-1605176173609-a0067079b419?w=500&auto=format&fit=crop" alt="Diagnostic Sets" class="w-full h-full object-cover" loading="lazy" decoding="async">
+                            </div>
+                            <h3 class="text-xl font-extrabold mb-2 text-secondary pointer-events-none">Diagnostic Equipment</h3>
+                            <p class="text-gray-600 text-sm pointer-events-none">Affordable stethoscopes, BP machines, and tendon hammers sourced directly for student budgets.</p>
+                        </div>
+                    </li>
+
+                    <!-- SLIDE 4: Past Papers -->
+                    <li id="carousel__slide4" tabindex="0" class="carousel__slide">
+                        <div class="product-card resource-card border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl hover:scale-105 transition bg-white text-left h-full cursor-pointer"
+                             data-title="Past Paper Bank"
+                             data-desc="Login to access our secure drive containing past papers from the last 5 years, arranged by unit and year of study. Includes suggested marking schemes."
+                             data-img="https://images.unsplash.com/vector-1753165713888-5d24d6d6794b?q=80&w=725&auto=format&fit=crop">
+                            <div class="aspect-square bg-gray-100 mb-4 rounded-lg overflow-hidden pointer-events-none">
+                                <img src="https://images.unsplash.com/vector-1753165713888-5d24d6d6794b?q=80&w=725&auto=format&fit=crop" alt="Past Papers" class="w-full h-full object-cover" loading="lazy" decoding="async">
+                            </div>
+                            <h3 class="text-xl font-extrabold mb-2 text-secondary pointer-events-none">Past Paper Bank</h3>
+                            <p class="text-gray-600 text-sm pointer-events-none">Access a digital repository of past exams and marking schemes from previous academic years.</p>
+                        </div>
+                    </li>
+
+                    <!-- SLIDE 5: Logbooks -->
+                    <li id="carousel__slide5" tabindex="0" class="carousel__slide">
+                        <div class="product-card resource-card border border-gray-200 rounded-xl p-6 shadow-md hover:shadow-xl hover:scale-105 transition bg-white text-left h-full cursor-pointer"
+                             data-title="Rotation Logbooks"
+                             data-desc="Download the standardized CMSA logbook for your internal medicine, surgery, pediatrics, and OBGYN rotations. Ensure every procedure is signed off."
+                             data-img="https://images.unsplash.com/photo-1544396821-4dd40b938ad3?w=600&q=75&auto=format&fit=crop">
+                            <div class="aspect-square bg-gray-100 mb-4 rounded-lg overflow-hidden pointer-events-none">
+                                <img src="https://images.unsplash.com/photo-1544396821-4dd40b938ad3?w=400&q=60&auto=format&fit=crop" alt="Clinical Logbooks" class="w-full h-full object-cover" loading="lazy" decoding="async">
+                            </div>
+                            <h3 class="text-xl font-extrabold mb-2 text-secondary pointer-events-none">Rotation Logbooks</h3>
+                            <p class="text-gray-600 text-sm pointer-events-none">Standardized logbooks to track your procedures and patient interactions during clinical rotations.</p>
+                        </div>
+                    </li>
+
+                     <!-- SLIDE 6: Mentorship -->
+                 
+                </ol>
+
+                <aside class="carousel__navigation">
+                    <ol class="carousel__navigation-list">
+                        <li class="carousel__navigation-item"><a href="#carousel__slide1" class="carousel__navigation-button">1</a></li>
+                        <li class="carousel__navigation-item"><a href="#carousel__slide2" class="carousel__navigation-button">2</a></li>
+                        <li class="carousel__navigation-item"><a href="#carousel__slide3" class="carousel__navigation-button">3</a></li>
+                        <li class="carousel__navigation-item"><a href="#carousel__slide4" class="carousel__navigation-button">4</a></li>
+                        <li class="carousel__navigation-item"><a href="#carousel__slide5" class="carousel__navigation-button">5</a></li>
+                        <li class="carousel__navigation-item"><a href="#carousel__slide6" class="carousel__navigation-button">6</a></li>
+                    </ol>
+                </aside>
+            </section>
+        </div>
+    </section>
+
+    <!-- About / Values Section -->
+    <section id="about" class="py-20 about-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Why Join CMSA?</h2>
+                <div class="w-20 h-1 bg-white mx-auto mb-6"></div>
+                <p class="text-lg text-gray-100">Empowering the next generation of healthcare providers through unity and skill.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Item 1 -->
+                <div class="flex flex-col items-center text-center relative z-0 hover:z-10 transition-all">
+                    <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&q=60&auto=format&fit=crop" 
+                         alt="Leadership" class="w-full h-40 object-cover rounded-lg shadow-md mb-4"
+                         loading="lazy" decoding="async">
+                    <h3 class="text-lg font-bold mb-2 text-white drop-shadow-lg">Leadership & Advocacy</h3>
+                    <p class="text-gray-200 mb-3 text-xs leading-relaxed">We represent student interests to the faculty and administration, ensuring fair policies and better learning environments.</p>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="flex flex-col items-center text-center relative z-0 hover:z-10 transition-all">
+                    <img src="https://images.unsplash.com/photo-1516574187841-69301995118a?w=400&q=60&auto=format&fit=crop" 
+                         alt="Research" class="w-full h-40 object-cover rounded-lg shadow-md mb-4"
+                         loading="lazy" decoding="async">
+                    <h3 class="text-lg font-bold mb-2 text-white drop-shadow-lg">Scientific Research</h3>
+                    <p class="text-gray-200 mb-3 text-xs leading-relaxed">Promoting a culture of inquiry by helping students publish papers and present at medical conferences.</p>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="flex flex-col items-center text-center relative z-0 hover:z-10 transition-all">
+                    <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?w=400&q=60&auto=format&fit=crop" 
+                         alt="Networking" class="w-full h-40 object-cover rounded-lg shadow-md mb-4"
+                         loading="lazy" decoding="async">
+                    <h3 class="text-lg font-bold mb-2 text-white drop-shadow-lg">Professional Networking</h3>
+                    <p class="text-gray-200 mb-3 text-xs leading-relaxed">Connect with peers from other universities and professional bodies like the Clinical Officers Council.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News / Blog Section -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest News & Updates</h2>
+                <div class="w-20 h-1 bg-primary mx-auto mb-6"></div>
+                <p class="text-lg text-gray-600">Stay informed about campus events, exam schedules, and association announcements.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- News Card 1 -->
+                <div class="bg-gray-50 p-8 rounded-xl border border-gray-100 hover:shadow-md transition">
+                    <div class="text-sm text-primary font-bold mb-2" data-date="March 10, 2026">March 10, 2026</div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800" data-title="Annual Medical Camp Success">Annual Medical Camp Success</h3>
+                    <p class="text-gray-600 text-sm mb-4">Our recent outreach in the local county attended to over 500 patients...</p>
+                    <a href="#" class="text-secondary font-bold text-sm uppercase read-more-btn"
+                        data-full-text="The annual CMSA Medical Camp was a massive success. Over 500 patients were screened for hypertension and diabetes. We thank our partners and the 40 student volunteers who dedicated their weekend to serving the community. Certificates of participation are now available at the office.">
+                        Read Report
+                    </a>
+                </div>
+
+                <!-- News Card 2 -->
+                <div class="bg-gray-50 p-8 rounded-xl border border-gray-100 hover:shadow-md transition">
+                    <div class="text-sm text-primary font-bold mb-2" data-date="February 22, 2026">February 22, 2026</div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800" data-title="Guest Lecture: Emergency Medicine">Guest Lecture: Emergency Medicine</h3>
+                    <p class="text-gray-600 text-sm mb-4">Dr. Sarah Kemunto, an Emergency Medicine specialist, will be visiting...</p>
+                    <a href="#" class="text-secondary font-bold text-sm uppercase read-more-btn"
+                        data-full-text="Join us this Friday at the Main Hall for a guest lecture on 'Triage and Trauma Management in Low Resource Settings' by Dr. Sarah Kemunto. This is a must-attend for final year students preparing for internships. Refreshments will be provided.">
+                        View Details
+                    </a>
+                </div>
+
+                <!-- News Card 3 -->
+                <div class="bg-gray-50 p-8 rounded-xl border border-gray-100 hover:shadow-md transition">
+                    <div class="text-sm text-primary font-bold mb-2" data-date="February 05, 2026">February 05, 2026</div>
+                    <h3 class="text-xl font-bold mb-3 text-gray-800" data-title="Association Elections 2026">Association Elections 2026</h3>
+                    <p class="text-gray-600 text-sm mb-4">The call for nominations for the new executive council is now open...</p>
+                    <a href="#" class="text-secondary font-bold text-sm uppercase read-more-btn"
+                        data-full-text="It is time to choose the next leaders of CMSA. Positions open include Chairperson, Secretary General, and Treasurer. Nomination forms can be collected from the student center. Campaigns begin next week. Ensure your subscription fees are up to date to be eligible to vote.">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-secondary text-white pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-gray-600 pb-10 mb-8">
+                <!-- Org Info -->
+                <div class="space-y-4">
+                    <h4 class="text-xl font-bold text-white">CMSA University Chapter</h4>
+                    <p class="text-sm text-gray-300">Dedicated to the holistic development of clinical medicine students. We build competence, character, and community.</p>
+                    <div class="flex space-x-4 text-lg">
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-bold mb-5">Quick Links</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#resources" class="text-gray-300 hover:text-white transition">Study Resources</a></li>
+                        <li><a href="#activities" class="text-gray-300 hover:text-white transition">Upcoming Events</a></li>
+                        <li><a href="#about" class="text-gray-300 hover:text-white transition">Constitution</a></li>
+                        <li><a href="#" class="text-gray-300 hover:text-white transition">Alumni Portal</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="text-lg font-bold mb-5">Contact Us</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-primary mt-1 mr-3"></i>
+                            <span class="text-gray-300">Student Center, Room 304<br>Main Campus</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope text-primary mt-1 mr-3"></i>
+                            <span class="text-gray-300">secretary@cmsa-university.org</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone-alt text-primary mt-1 mr-3"></i>
+                            <span class="text-gray-300">+254 700 000 000</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center text-sm text-gray-400">
+                &copy; 2026 Clinical Medicine Students Association. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- News Modal -->
+    <div id="news-modal" class="full-screen-modal fixed inset-0 z-[100] items-center justify-center bg-black bg-opacity-80 p-4 transition-opacity duration-300" onclick="closeNewsModal(event)">
+        <div class="modal-content-animated bg-white w-full max-w-4xl max-h-[90vh] rounded-xl shadow-2xl overflow-y-auto relative p-6 md:p-10" onclick="event.stopPropagation()">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-dark transition text-2xl" onclick="closeNewsModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="border-b pb-4 mb-6">
+                <p id="modal-date" class="text-sm text-primary font-bold mb-1"></p>
+                <h2 id="modal-title" class="text-3xl font-bold text-gray-900"></h2>
+            </div>
+            <p id="modal-full-text" class="text-lg text-gray-700 leading-relaxed"></p>
+        </div>
+    </div>
+
+    <!-- Resource Preview Modal (Smaller Pop-up) -->
+    <div id="resource-modal" class="full-screen-modal fixed inset-0 z-[100] items-center justify-center bg-black bg-opacity-80 p-4 transition-opacity duration-300" onclick="closeResourceModal(event)">
+        <div class="modal-content-animated bg-white w-full max-w-md rounded-xl shadow-2xl overflow-hidden relative" onclick="event.stopPropagation()">
+            
+            <!-- Image Area -->
+            <div class="h-48 w-full bg-gray-100">
+                <img id="res-modal-img" src="" alt="Resource Preview" class="w-full h-full object-cover">
+            </div>
+
+            <!-- Content Area -->
+            <div class="p-6">
+                <button class="absolute top-4 right-4 bg-white rounded-full p-1 text-gray-500 hover:text-dark transition shadow-md" onclick="closeResourceModal()">
+                    <i class="fas fa-times text-xl w-6 h-6 flex items-center justify-center"></i>
+                </button>
+
+                <h2 id="res-modal-title" class="text-2xl font-bold text-gray-900 mb-3"></h2>
+                <p id="res-modal-desc" class="text-gray-600 mb-6 text-sm leading-relaxed"></p>
+
+                <button class="w-full py-3 bg-primary text-white font-bold rounded-lg hover:bg-secondary transition shadow-md uppercase tracking-wide text-sm">
+                    Access Resource
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inquiry / Join Modal -->
+    <div id="inquiry-modal" class="full-screen-modal fixed inset-0 z-[100] items-center justify-center bg-black bg-opacity-80 p-4 transition-opacity duration-300" onclick="closeInquiryModal(event)">
+        <div class="modal-content-animated bg-white w-full max-w-2xl max-h-[90vh] rounded-xl shadow-2xl overflow-y-auto relative p-6 md:p-10 text-gray-800" onclick="event.stopPropagation()">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-dark transition text-2xl" onclick="closeInquiryModal()">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <h2 class="text-2xl md:text-3xl font-bold text-secondary mb-2">Join / Contact CMSA</h2>
+            <p class="text-gray-600 mb-6 border-b pb-4">Fill out the form below for membership inquiries, event registration, or general questions.</p>
+
+            <form id="inquiry-form" onsubmit="handleInquirySubmit(event)" method="POST" action="https://formspree.io/f/your-form-id" class="flex flex-col gap-4">
+                
+                <input type="text" id="inquiry-name" name="name" placeholder="Full Name" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-primary bg-gray-50" required>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="reg-no" name="reg_no" placeholder="Registration No. (e.g., CM/001/24)" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-primary bg-gray-50" required>
+                    <select name="year" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-primary bg-gray-50 text-gray-600" required>
+                        <option value="" disabled selected>Year of Study</option>
+                        <option value="1">Year 1</option>
+                        <option value="2">Year 2</option>
+                        <option value="3">Year 3</option>
+                        <option value="4">Year 4 (Intern)</option>
+                    </select>
+                </div>
+
+                <input type="email" id="inquiry-email" name="email" placeholder="Student Email Address" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-primary bg-gray-50" required>
+
+                <select name="subject" class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-primary bg-gray-50 text-gray-600" required>
+                    <option value="" disabled selected>Reason for Contact...</option>
+                    <option value="Membership Registration">New Membership Registration</option>
+                    <option value="Event Signup">Sign up for Medical Camp/Workshop</option>
+                    <option value="Academic Query">Academic/Exam Support</option>
+                    <option value="General Inquiry">General Inquiry</option>
+                </select>
+
+                <textarea id="inquiry-message" name="message" rows="4" placeholder="Additional details or questions..." class="w-full px-4 py-3 border border-gray-300 rounded focus:outline-none focus:border-primary bg-gray-50"></textarea>
+
+                <div class="flex items-center bg-gray-50 rounded border border-gray-300 px-4 py-3">
+                    <label for="captcha-input" id="captcha-question" class="font-medium text-sm text-gray-600 mr-4 whitespace-nowrap">What is 10 + 5?</label>
+                    <input type="number" id="captcha-input" placeholder="Answer" class="flex-grow bg-transparent focus:outline-none text-gray-800" required>
+                </div>
+
+                <p id="captcha-error" class="text-red-500 font-medium text-sm hidden">Incorrect answer.</p>
+
+                <div class="flex justify-center mt-4">
+                    <button type="submit" id="submit-button" class="w-full px-6 py-3 bg-primary text-white font-bold rounded hover:bg-secondary transition btn-hover uppercase tracking-wider text-base shadow-lg">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Logic Script -->
+    <script>
+        // --- Modal Logic ---
+        function openInquiryModal() {
+            document.getElementById('inquiry-modal').classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeInquiryModal(event) {
+            if (event && event.target !== event.currentTarget && event.target.tagName !== 'BUTTON' && !event.target.classList.contains('fa-times')) return;
+            document.getElementById('inquiry-modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // News Modal Logic
+        const newsModal = document.getElementById('news-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDate = document.getElementById('modal-date');
+        const modalText = document.getElementById('modal-full-text');
+
+        document.querySelectorAll('.read-more-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const card = this.closest('div');
+                const title = card.querySelector('[data-title]').textContent;
+                const date = card.querySelector('[data-date]').textContent;
+                const fullText = this.getAttribute('data-full-text');
+
+                modalTitle.textContent = title;
+                modalDate.textContent = date;
+                modalText.textContent = fullText;
+
+                newsModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        function closeNewsModal(event) {
+             if (event && event.target !== event.currentTarget && event.target.tagName !== 'BUTTON' && !event.target.classList.contains('fa-times')) return;
+            newsModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // --- NEW RESOURCE MODAL LOGIC ---
+        const resourceModal = document.getElementById('resource-modal');
+        const resModalTitle = document.getElementById('res-modal-title');
+        const resModalDesc = document.getElementById('res-modal-desc');
+        const resModalImg = document.getElementById('res-modal-img');
+
+        document.querySelectorAll('.resource-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const title = this.getAttribute('data-title');
+                const desc = this.getAttribute('data-desc');
+                const img = this.getAttribute('data-img');
+
+                resModalTitle.textContent = title;
+                resModalDesc.textContent = desc;
+                resModalImg.src = img;
+
+                resourceModal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        function closeResourceModal(event) {
+            if (event && event.target !== event.currentTarget && event.target.tagName !== 'BUTTON' && !event.target.classList.contains('fa-times')) return;
+            resourceModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Mobile Menu Logic
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        if(btn && menu) {
+            btn.addEventListener('click', () => {
+                if(menu.classList.contains('active')) {
+                    menu.classList.remove('active');
+                } else {
+                    menu.classList.add('active');
+                }
+            });
+            // Close menu when a link is clicked
+            menu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                     menu.classList.remove('active');
+                });
+            });
+        }
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('header-scrolled');
+            } else {
+                nav.classList.remove('header-scrolled');
+            }
+        });
+
+        // --- Simple Captcha Logic ---
+        function handleInquirySubmit(e) {
+            e.preventDefault();
+            const answer = document.getElementById('captcha-input').value;
+            // Question is 10 + 5
+            if(parseInt(answer) !== 15) {
+                document.getElementById('captcha-error').classList.remove('hidden');
+                document.getElementById('captcha-error').innerText = "Incorrect math answer. Please try again.";
+                return;
+            }
+            
+            // Simulation of submission
+            const btn = document.getElementById('submit-button');
+            const originalText = btn.innerText;
+            btn.innerText = 'Sending...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert("Thank you! Your inquiry has been sent to the CMSA executive board.");
+                closeInquiryModal();
+                btn.innerText = originalText;
+                btn.disabled = false;
+                document.getElementById('inquiry-form').reset();
+                document.getElementById('captcha-error').classList.add('hidden');
+            }, 1500);
+        }
+
+        // --- Carousel Logic (Embedded) ---
+        (function(){
+            if(!('querySelector' in document)) return;
+            function qs(sel){return document.querySelector(sel)}
+            function qsa(sel){return Array.from(document.querySelectorAll(sel))}
+
+            const carousel = qs('.carousel__viewport');
+            if(!carousel) return;
+            const slides = qsa('.carousel__slide');
+            const prevBtn = qs('.carousel__prev');
+            const nextBtn = qs('.carousel__next');
+            const navButtons = qsa('.carousel__navigation-button');
+
+            function scrollToIndex(i){
+                i = Math.max(0, Math.min(slides.length-1, i));
+                const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const behavior = prefersReduced ? 'auto' : 'smooth';
+                try{
+                    if(carousel && typeof carousel.scrollTo === 'function'){
+                        const left = slides[i].offsetLeft - (parseInt(getComputedStyle(carousel).paddingLeft,10) || 0);
+                        carousel.scrollTo({ left: left, behavior: behavior });
+                    } else {
+                        slides[i].scrollIntoView({behavior: behavior, inline:'start', block:'nearest'});
+                    }
+                }catch(err){
+                    try{ slides[i].scrollIntoView({behavior:'auto', inline:'start', block:'nearest'}); }catch(e){}
+                }
+            }
+
+            function getClosestSlideIndex(){
+                const containerRect = carousel.getBoundingClientRect();
+                let min = Infinity, idx = 0;
+                slides.forEach((s,i)=>{
+                    const d = Math.abs(s.getBoundingClientRect().left - containerRect.left);
+                    if(d < min){ min = d; idx = i; }
+                });
+                return idx;
+            }
+
+            function updateActive(i){
+                navButtons.forEach((b,bi)=>{
+                    if(bi === i){ b.classList.add('active'); b.setAttribute('aria-current','true'); }
+                    else { b.classList.remove('active'); b.removeAttribute('aria-current'); }
+                });
+            }
+
+            navButtons.forEach((btn, i)=>{
+                btn.addEventListener('click', function(e){ e.preventDefault(); scrollToIndex(i); });
+            });
+
+            function handleControlClick(e, dir){
+                try{ e.preventDefault(); }catch(_){}
+                if(dir === 'prev') scrollToIndex(getClosestSlideIndex()-1);
+                else if(dir === 'next') scrollToIndex(getClosestSlideIndex()+1);
+            }
+
+            if(prevBtn) prevBtn.addEventListener('click', function(e){ handleControlClick(e,'prev'); });
+            if(nextBtn) nextBtn.addEventListener('click', function(e){ handleControlClick(e,'next'); });
+
+            carousel.addEventListener('scroll', function(){ updateActive(getClosestSlideIndex()); }, {passive:true});
+            updateActive(getClosestSlideIndex());
+        })();
+    </script>
+
+    <!-- Floating WhatsApp quick link -->
+    <a href="https://wa.me/254700000000" class="whatsapp-float" target="_blank" rel="noopener" title="Chat with CMSA Rep">
+        <i class="fab fa-whatsapp" aria-hidden="true"></i>
+    </a>
+</body>
+</html>
